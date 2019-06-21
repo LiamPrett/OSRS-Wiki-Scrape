@@ -2,6 +2,7 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 from urllib.error import *
 import re
+import time
 
 url = ""
 
@@ -15,10 +16,12 @@ def data_fetch():
         print("-----Item Details-----")
         ItemName = soup.select('h1.firstHeading')[0].text.strip()
         print(ItemName)
+        time.sleep(1)
         Desc = soup.select('p')[0].text.strip()
         Desc = Desc.split(".")
         print(Desc[0])
         print(Desc[1])
+        time.sleep(1)
 
         for sibling in soup.find("table",{"class":"infobox"}).tr.next_siblings:
             full_page_info = sibling.get_text()
@@ -48,6 +51,7 @@ def data_fetch():
                 examine.append(full_page_info[7:])
                 examine[0] += " text"
                 print(examine)
+                time.sleep(1)
             elif "High alch" in full_page_info:
                 print("")
                 print("-----Item Values-----")
@@ -104,7 +108,7 @@ def data_fetch():
     except URLError as e:
         print("The server could not be found")
     except AttributeError as e:
-        print("Tag was not found")
+        pass
     else:
         pass
 
