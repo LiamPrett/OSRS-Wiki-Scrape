@@ -4,7 +4,7 @@ from urllib.error import *
 import re
 
 try:
-    site = "http://oldschool.runescape.wiki/w/Dragon_platelegs"
+    site = "http://oldschool.runescape.wiki/w/Ahrims_robeskirt"
     hdr = {'User-Agent': 'Mozilla/5.0'}
     req = Request(site, headers=hdr)
     page = urlopen(req)
@@ -34,7 +34,9 @@ try:
             noteable = re.findall('[A-Z][a-z]*', full_page_info)
             print(noteable)
         elif "Destroy" in full_page_info:
-            destroy = re.findall('[A-Z][a-z]*', full_page_info)
+            destroy = []
+            destroy.append(full_page_info[:7])
+            destroy.append(full_page_info[7:])
             destroy[0] += " option"
             print(destroy)
         elif "Examine" in full_page_info:
