@@ -4,14 +4,23 @@ from urllib.error import *
 import re
 
 try:
-    site = "http://oldschool.runescape.wiki/w/Rune_scimitar"
+    site = "http://oldschool.runescape.wiki/w/Dragon_platelegs"
     hdr = {'User-Agent': 'Mozilla/5.0'}
     req = Request(site, headers=hdr)
     page = urlopen(req)
     soup = BeautifulSoup(page, 'html.parser')
+    print("-----Item Details-----")
+    ItemName = soup.select('h1.firstHeading')[0].text.strip()
+    print(ItemName)
+    Desc = soup.select('p')[0].text.strip()
+    Desc = Desc.split(".")
+    print(Desc[0])
+    print(Desc[1])
+
     for sibling in soup.find("table",{"class":"infobox"}).tr.next_siblings:
         full_page_info = sibling.get_text()
         if "Tradeable" in full_page_info:
+            print("")
             print("-----Item Properties-----")
             tradeable = re.findall('[A-Z][a-z]*', full_page_info)
             print(tradeable)
@@ -35,7 +44,7 @@ try:
             examine[0] += " text"
             print(examine)
         elif "High alch" in full_page_info:
-            print("\n")
+            print("")
             print("-----Item Values-----")
             highalch = []
             highalch.append(full_page_info[:9])
@@ -46,7 +55,7 @@ try:
             lowalch = []
             lowalch.append(full_page_info[:8])
             lowalch.append(full_page_info[8:])
-            lowalch[0] += "value"
+            lowalch[0] += " value"
             print(lowalch)
         elif "Store price" in full_page_info:
             storeprice = []
@@ -79,22 +88,10 @@ try:
                 volume = []
                 volume.append(full_page_info[:12])
                 volume.append(full_page_info[12:])
+                split = volume[0].split(" ")
+                volume[0] = split[0] + " trade " + split[1]
                 print(volume)
 
-
-
-
-
-
-
-
-
-
-    # html = urlopen("http://oldschool.runescape.wiki/w/Rune_dagger")
-    # bs = BeautifulSoup(html.read(), 'html.parser')
-    # nameList = bs.find_all("tr", {"class": "undefined"})
-    # for name in nameList:
-    #     print(name.get_text())
 
 except HTTPError as e:
     print(e)
