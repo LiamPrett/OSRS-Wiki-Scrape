@@ -6,7 +6,40 @@ import time
 
 url = ""
 
-def data_fetch():
+def drop_rate_fetch():
+    try:
+        site = url
+        hdr = {'User-Agent': 'Mozilla/5.0'}
+        req = Request(site, headers=hdr)
+        page = urlopen(req)
+        soup = BeautifulSoup(page, 'html.parser')
+        print("-----Drop Rate Info-----")
+        yeet = soup.find("table",{"class":"item-drops"}).tr.next_siblings
+        for td in yeet:
+            drops_table = {}
+            drops_table = (td.get_text())
+            print(drops_table)
+
+
+    except HTTPError as e:
+        print("Error: Could not find an item at the url")
+        print("The error exprienced was as follows: " + str(e))
+    except URLError as e:
+        print("The server could not be found")
+    except AttributeError as e:
+        pass
+    else:
+        pass
+
+
+
+
+
+
+
+
+
+def generic_data_fetch():
     try:
         site = url
         hdr = {'User-Agent': 'Mozilla/5.0'}

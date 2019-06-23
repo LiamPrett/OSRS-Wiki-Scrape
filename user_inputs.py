@@ -12,7 +12,17 @@ def greeting():
 
 
 def what_item():
-    item = input("What item would you like to search for?: ")
+    item = input("What would you like to search for?: ")
     print("Searching for " + item)
     item = item.replace(" ", "_")
-    scrape.url = "http://oldschool.runescape.wiki/w/" + item
+    scrape.url = "http://oldschool.runescape.wiki/w/" + item.lower()
+
+    if "drop_rate" or "droprate" or "drop_table" or "droptable" in scrape.url:
+        scrape.url = scrape.url.replace("_droprate", "")
+        scrape.url = scrape.url.replace("_drop_rate", "")
+        scrape.url = scrape.url.replace("_droptable", "")
+        scrape.url = scrape.url.replace("_droptable", "")
+        print(scrape.url)
+        scrape.drop_rate_fetch()
+    else:
+        scrape.generic_data_fetch()
