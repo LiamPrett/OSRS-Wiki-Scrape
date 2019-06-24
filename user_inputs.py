@@ -16,6 +16,7 @@ def what_item():
     print("Searching for " + item)
     item = item.replace(" ", "_")
     scrape.url = "http://oldschool.runescape.wiki/w/" + item.lower()
+
     if "drop_rate" in scrape.url or "_droprate" in scrape.url or "drop_table" in scrape.url or "_droptable" in scrape.url:
         scrape.url = scrape.url.replace("_droprate", "")
         scrape.url = scrape.url.replace("_drop_rate", "")
@@ -23,5 +24,13 @@ def what_item():
         scrape.url = scrape.url.replace("_drop_table", "")
         print(scrape.url)
         scrape.drop_rate_fetch()
+
+    if "prices" in scrape.url or "price" in scrape.url or "alch price" in scrape.url or "alchprice" in scrape.url:
+        scrape.url = scrape.url.replace("_prices", "")
+        scrape.url = scrape.url.replace("_price", "")
+        scrape.url = scrape.url.replace("_alch", "")
+        scrape.url = scrape.url.replace("_alchprice", "")
+        scrape.price_fetch()
+
     else:
         scrape.generic_data_fetch()

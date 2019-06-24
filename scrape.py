@@ -55,11 +55,69 @@ def drop_rate_fetch():
         pass
 
 
+def price_fetch():
+    try:
+        site = url
+        hdr = {'User-Agent': 'Mozilla/5.0'}
+        req = Request(site, headers=hdr)
+        page = urlopen(req)
+        soup = BeautifulSoup(page, 'html.parser')
 
+        for sibling in soup.find("table", {"class": "infobox"}).tr.next_siblings:
+            full_page_info = sibling.get_text()
+            if "High alch" in full_page_info:
+                print("")
+                print("-----Item Values-----")
+                highalch = []
+                highalch.append(full_page_info[:9])
+                highalch.append(full_page_info[9:])
+                highalch[0] += " value"
+                print(highalch)
 
+            elif "Low alch" in full_page_info:
+                lowalch = []
+                lowalch.append(full_page_info[:8])
+                lowalch.append(full_page_info[8:])
+                lowalch[0] += " value"
+                print(lowalch)
+            elif "Store price" in full_page_info:
+                storeprice = []
+                storeprice.append(full_page_info[:11])
+                storeprice.append(full_page_info[11:])
+                print(storeprice)
+            elif "Exchange" in full_page_info:
+                if "Grand" in full_page_info:
+                    pass
+                else:
+                    exchange = []
+                    exchange.append(full_page_info[:8])
+                    exchange.append(full_page_info[8:])
+                    exchange[1] = exchange[1].strip(" (info)")
+                    exchange[0] += " price"
+                    print(exchange)
+            elif "Buy limit" in full_page_info:
+                buylimit = []
+                buylimit.append(full_page_info[:9])
+                buylimit.append(full_page_info[9:])
+                print(buylimit)
+            else:
+                if "Daily volume" in full_page_info:
+                    volume = []
+                    volume.append(full_page_info[:12])
+                    volume.append(full_page_info[12:])
+                    split = volume[0].split(" ")
+                    volume[0] = split[0] + " trade " + split[1]
+                    print(volume)
 
-
-
+    except HTTPError as e:
+        print("Error: Could not find an item at the url")
+        print("The error exprienced was as follows: " + str(e))
+    except URLError as e:
+        print("The server could not be found")
+    except AttributeError as e:
+        pass
+    else:
+        pass
 
 
 def generic_data_fetch():
@@ -156,6 +214,7 @@ def generic_data_fetch():
                     split = volume[0].split(" ")
                     volume[0] = split[0] + " trade " + split[1]
                     print(volume)
+        drop_rate_fetch()
 
 
     except HTTPError as e:
