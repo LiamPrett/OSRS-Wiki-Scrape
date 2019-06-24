@@ -62,7 +62,6 @@ def price_fetch():
         req = Request(site, headers=hdr)
         page = urlopen(req)
         soup = BeautifulSoup(page, 'html.parser')
-
         for sibling in soup.find("table", {"class": "infobox"}).tr.next_siblings:
             full_page_info = sibling.get_text()
             if "High alch" in full_page_info:
