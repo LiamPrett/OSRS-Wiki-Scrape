@@ -14,11 +14,34 @@ def drop_rate_fetch():
         page = urlopen(req)
         soup = BeautifulSoup(page, 'html.parser')
         print("-----Drop Rate Info-----")
-        yeet = soup.find("table",{"class":"item-drops"}).tr.next_siblings
-        for td in yeet:
-            drops_table = {}
-            drops_table = (td.get_text())
-            print(drops_table)
+        drops = soup.find("table",{"class":"item-drops"}).findAll("td")
+
+        drops_table = {
+            "Name": "",
+            "Combat Level": "",
+            "Drop Amount": "",
+            "Drop Rate": ""
+        }
+        loop = 1
+        for td in drops:
+            if loop is 1:
+                drops_table["Name"] = (td.get_text())
+                loop += 1
+            elif loop is 2:
+                drops_table["Combat Level"] = (td.get_text())
+                loop += 1
+            elif loop is 3:
+                drops_table["Drop Amount"] = (td.get_text())
+                loop += 1
+            else:
+                if loop is 4:
+                    drops_table["Drop Rate"] = (td.get_text())
+                    loop = 1
+                    print(drops_table)
+                    drops_table.clear()
+                    time.sleep(0.5)
+
+
 
 
     except HTTPError as e:
