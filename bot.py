@@ -8,6 +8,8 @@ from urllib.error import *
 import re
 import time
 import info
+import osrs_price
+
 
 TOKEN = 'NTkyOTg0NTU3MDIwNzc0NDMx.XRHYWA.BdEyZs2PlGqJHsZDCH3ZO6qhRD0'
 
@@ -15,10 +17,9 @@ client = discord.Client()
 
 @client.event
 async def on_message(message):
-    # we do not want the bot to reply to itself
     if message.author == client.user:
         return
-
+    #OSRS PRICE COMMAND.
     if message.content.startswith('!price'):
         info.lowalch = []
         info.highalch = []
@@ -32,61 +33,7 @@ async def on_message(message):
         item = search_term.replace(" ", "_")
         info.url = "http://oldschool.runescape.wiki/w/" + item.lower()
         print(info.url)
-        try:
-            site = info.url
-            hdr = {'User-Agent': 'Mozilla/5.0'}
-            req = Request(site, headers=hdr)
-            page = urlopen(req)
-            soup = BeautifulSoup(page, 'html.parser')
-            for sibling in soup.find("table", {"class": "infobox"}).tr.next_siblings:
-                full_page_info = sibling.get_text()
-                if "High alch" in full_page_info:
-                    print("")
-                    print("-----Item Values-----")
-                    info.highalch.append(full_page_info[:9])
-                    info.highalch.append(full_page_info[9:])
-                    info.highalch[0] += " value"
-                    print(info.highalch)
-
-                elif "Low alch" in full_page_info:
-                    info.lowalch.append(full_page_info[:8])
-                    info.lowalch.append(full_page_info[8:])
-                    info.lowalch[0] += " value"
-                    print(info.lowalch)
-                elif "Store price" in full_page_info:
-                    info.storeprice.append(full_page_info[:11])
-                    info.storeprice.append(full_page_info[11:])
-                    print(info.storeprice)
-                elif "Exchange" in full_page_info:
-                    if "Grand" in full_page_info:
-                        pass
-                    else:
-                        info.exchange.append(full_page_info[:8])
-                        info.exchange.append(full_page_info[8:])
-                        info.exchange[1] = info.exchange[1].strip(" (info)")
-                        info.exchange[0] += " price"
-                        print(info.exchange)
-                elif "Buy limit" in full_page_info:
-                    info.buylimit.append(full_page_info[:9])
-                    info.buylimit.append(full_page_info[9:])
-                    print(info.buylimit)
-                else:
-                    if "Daily volume" in full_page_info:
-                        info.volume.append(full_page_info[:12])
-                        info.volume.append(full_page_info[12:])
-                        split = info.volume[0].split(" ")
-                        info.volume[0] = split[0] + " trade " + split[1]
-                        print(info.volume)
-
-        except HTTPError as e:
-            print("Error: Could not find an item at the url")
-            print("The error exprienced was as follows: " + str(e))
-        except URLError as e:
-            print("The server could not be found")
-        except AttributeError as e:
-            pass
-        else:
-            pass
+        osrs_price.price_fetch()
         highalch = info.highalch[1].format(message)
         lowalch = info.lowalch[1].format(message)
         storeprice = info.storeprice[1].format(message)
@@ -96,6 +43,23 @@ async def on_message(message):
         await client.send_message(message.channel, "Low Alch Value: " + lowalch + "\n" + "High Alch Value: " + highalch
                                   + "\n" + "Store Price Price: " + storeprice + "\n" + "Grand Exchange Price: " + exchange + "\n"
                                   + "GE Buy Limit: " + buylimit + "\n" + "Daily Trade Volume (Average): " + volume)
+
+    # WHO IS GRAHAM COMMAND COMMAND
+    elif message.content.startswith('!whoisgraham') or message.content.startswith("whoissealpup"):
+        await client.send_message(message.channel, "I'm glad you asked!" + "\n" + "https://www.youtube.com/watch?v=3A2P-x8GPxg")
+
+    # LIGHT THE BEACONS COMMAND
+    elif message.content.startswith("!beacon") or message.content.startswith("!lightthebeacons"):
+        await client.send_message(message.channel, "https://gph.is/12wRTQi")
+
+    # HELP COMMAND
+    else:
+        if message.content.startswith('!help'):
+            await client.send_message(message.channel,
+                                      "Currently, the following commands are supported:" + "\n" + "\n" + "1. !prices" + "\n"
+                                      + "This is performed by typing '!prices item. For example, '!price rune dagger'" + "\n" + "\n"
+                                      + "2. !whoisgraham or !whoissealpup" + "\n" + "Why dont you find out who he is? Im not going to tell you."
+                                      +"\n" + "\n" + "3. !beacons or !lightthebeacons" + "\n" + "Type: !beacons or !lightthebeacons to signal the Rohirrim for aid.")
 
 
 @client.event
