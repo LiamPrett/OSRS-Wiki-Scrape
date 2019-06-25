@@ -21,6 +21,12 @@ async def on_message(message):
         return
     #OSRS PRICE COMMAND.
     if message.content.startswith('!price'):
+        lowalch = ""
+        highalch = ""
+        storeprice = ""
+        buylimit = ""
+        volume = ""
+        exchange = ""
         info.lowalch = []
         info.highalch = []
         info.storeprice = []
@@ -34,12 +40,31 @@ async def on_message(message):
         info.url = "http://oldschool.runescape.wiki/w/" + item.lower()
         print(info.url)
         osrs_price.price_fetch()
-        highalch = info.highalch[1].format(message)
-        lowalch = info.lowalch[1].format(message)
-        storeprice = info.storeprice[1].format(message)
-        exchange = info.exchange[1].format(message)
-        buylimit = info.buylimit[1].format(message)
-        volume = info.volume[1].format(message)
+        if len(info.highalch) > 1:
+            highalch = info.highalch[1].format(message)
+        else:
+            pass
+        if len(info.lowalch) > 1:
+            lowalch = info.lowalch[1].format(message)
+        else:
+            pass
+        if len(info.storeprice) > 1:
+            storeprice = info.storeprice[1].format(message)
+        else:
+            pass
+        if len(info.exchange) > 1:
+            exchange = info.exchange[1].format(message)
+        else:
+            pass
+        if len(info.buylimit) > 1:
+            buylimit = info.buylimit[1].format(message)
+        else:
+            pass
+        if len(info.volume) > 1:
+            volume = info.volume[1].format(message)
+        else:
+            pass
+
         await client.send_message(message.channel, "Low Alch Value: " + lowalch + "\n" + "High Alch Value: " + highalch
                                   + "\n" + "Store Price Price: " + storeprice + "\n" + "Grand Exchange Price: " + exchange + "\n"
                                   + "GE Buy Limit: " + buylimit + "\n" + "Daily Trade Volume (Average): " + volume)
