@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.error import *
 import re
 import time
+import bot
 
 url = ""
 
