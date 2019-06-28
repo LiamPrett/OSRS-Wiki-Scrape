@@ -1,5 +1,6 @@
 import datetime
-import scrape
+from command_line import scrape
+
 
 def greeting():
     current_time = datetime.datetime.now()

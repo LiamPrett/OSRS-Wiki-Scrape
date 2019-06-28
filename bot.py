@@ -1,12 +1,5 @@
 # Work with Python 3.6
 import discord
-import scrape
-import bs4
-from urllib.request import Request, urlopen
-from bs4 import BeautifulSoup
-from urllib.error import *
-import re
-import time
 import info
 import osrs_price
 import drop_table
@@ -71,9 +64,9 @@ async def on_message(message):
                                   + "GE Buy Limit: " + buylimit + "\n" + "Daily Trade Volume (Average): " + volume)
 
     #DROP TABLE COMMAND
-    elif message.content.startswith('!drop table'):
+    elif message.content.startswith('!dt'):
         search_term = message.content
-        search_term = search_term[12:]
+        search_term = search_term[4:]
         item = search_term.replace(" ", "_")
         info.url = "http://oldschool.runescape.wiki/w/" + item.lower()
         print(info.url)
@@ -81,8 +74,18 @@ async def on_message(message):
         item_list = ""
         for item in info.composite_list:
             item_list += str(item).strip("[" + "]") + "\n"
-        await client.send_message(message.channel, "NPC Name, NPC Level, Drop Amount, Drop Rate")
-        await client.send_message(message.channel, item_list)
+        if len(item_list) > 2000:
+            middle = ( len(item_list) / 2)
+            firstpart = item_list[:int(middle)]
+            secondpart = item_list[int(middle):]
+            await client.send_message(message.channel, "NPC Name, NPC Level, Drop Amount, Drop Rate")
+            await client.send_message(message.channel, firstpart)
+            await client.send_message(message.channel, secondpart)
+        elif item_list is None or item_list is "":
+            await client.send_message(message.channel, "No Results Found - The item either does not have a drop table or your spelling is incorrect")
+        else:
+            await client.send_message(message.channel, "NPC Name, NPC Level, Drop Amount, Drop Rate")
+            await client.send_message(message.channel, item_list)
         info.composite_list.clear()
 
 
@@ -94,14 +97,22 @@ async def on_message(message):
     elif message.content.startswith("!beacon") or message.content.startswith("!lightthebeacons"):
         await client.send_message(message.channel, "https://gph.is/12wRTQi")
 
+    elif message.content.startswith("!github"):
+        await client.send_message(message.channel, "https://github.com/LiamPrett/OSRS-Wiki-Scrape")
+
     # HELP COMMAND
     else:
         if message.content.startswith('!help'):
             await client.send_message(message.channel,
-                                      "Currently, the following commands are supported:" + "\n" + "\n" + "1. !prices" + "\n"
-                                      + "This is performed by typing '!prices item. For example, '!price rune dagger'" + "\n" + "\n"
-                                      + "2. !whoisgraham or !whoissealpup" + "\n" + "Why dont you find out who he is? Im not going to tell you."
-                                      +"\n" + "\n" + "3. !beacons or !lightthebeacons" + "\n" + "Type: !beacons or !lightthebeacons to signal the Rohirrim for aid.")
+          "Currently, the following commands are supported:" + "\n" + "\n"
+            + "1. **!prices**" + "\n" + "This is performed by typing **'!prices item'**. For example, **'!price rune dagger'**" + "\n" + "\n"
+            + "2. **!drop table**" + "\n" + "This is performed by typing '**!drop table item**'. For example, '**!drop table bandos boots'**." + "\n" + "\n"
+            + "3. **!whoisgraham** or **!whoissealpup**" + "\n" + "Why dont you find out who he is? Im not going to tell you."+ "\n" + "\n"
+            + "4. **!beacons** or **!lightthebeacons**" + "\n" + "Type: **!beacons** or **!lightthebeacons** to signal the Rohirrim for aid.")
+
+            await client.send_message(message.channel,
+              "*Help commands continued...1*" + "\n" +
+              "5. **!github**" + "\n" + "Type: **!github** to get the source code for this bot, as well as updates on upcoming features.")
 
 
 @client.event

@@ -1,11 +1,6 @@
-import discord
-import scrape
-import bs4
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 from urllib.error import *
-import re
-import time
 import info
 
 
