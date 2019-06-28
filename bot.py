@@ -9,6 +9,7 @@ import re
 import time
 import info
 import osrs_price
+import drop_table
 
 
 TOKEN = 'NTkyOTg0NTU3MDIwNzc0NDMx.XRHYWA.BdEyZs2PlGqJHsZDCH3ZO6qhRD0'
@@ -68,6 +69,22 @@ async def on_message(message):
         await client.send_message(message.channel, "Low Alch Value: " + lowalch + "\n" + "High Alch Value: " + highalch
                                   + "\n" + "Store Price Price: " + storeprice + "\n" + "Grand Exchange Price: " + exchange + "\n"
                                   + "GE Buy Limit: " + buylimit + "\n" + "Daily Trade Volume (Average): " + volume)
+
+    #DROP TABLE COMMAND
+    elif message.content.startswith('!drop table'):
+        search_term = message.content
+        search_term = search_term[12:]
+        item = search_term.replace(" ", "_")
+        info.url = "http://oldschool.runescape.wiki/w/" + item.lower()
+        print(info.url)
+        drop_table.drop_table_fetch()
+        item_list = ""
+        for item in info.composite_list:
+            item_list += str(item).strip("[" + "]") + "\n"
+        await client.send_message(message.channel, "NPC Name, NPC Level, Drop Amount, Drop Rate")
+        await client.send_message(message.channel, item_list)
+        info.composite_list.clear()
+
 
     # WHO IS GRAHAM COMMAND COMMAND
     elif message.content.startswith('!whoisgraham') or message.content.startswith("whoissealpup"):
